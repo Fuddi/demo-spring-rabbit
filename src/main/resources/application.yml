@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: demo-spring-rabbit
+
+  rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        concurrency: 1
+        default-requeue-rejected: false
+        max-concurrency: 3
+        prefetch: 250
+        retry:
+          max-attempts: 3
+          enabled: true
+          initial-interval: 4s
+          max-interval: 30s
+          multiplier: 2

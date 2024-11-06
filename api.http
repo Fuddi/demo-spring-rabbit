@@ -1,0 +1,11 @@
+### POST produce message
+POST localhost:8080/rabbit/produce
+Content-Type: application/json
+
+{
+  "foo": "bar",
+  "magic": 42
+}
+
+
+###
