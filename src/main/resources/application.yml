@@ -17,3 +17,12 @@ spring:
           initial-interval: 4s
           max-interval: 30s
           multiplier: 2
+
+
+custom-consumer:
+  retry:
+    enabled: true
+    max-attempts: 5
+    initial-interval: 5s
+    max-interval: 40s
+    multiplier: 3

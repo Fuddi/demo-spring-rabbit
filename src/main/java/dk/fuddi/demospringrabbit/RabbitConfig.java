@@ -12,9 +12,13 @@ public class RabbitConfig {
     public static final String ROUTING_KEY_BI = "demo.bi";
 
     public static final String ROUTING_KEY_BI_DEAD = "demo.bi.dead";
+    public static final String ROUTING_KEY_X_LIMIT_DEAD = "demo.x-limit.dead";
 
     public static final String QUEUE_BI = "ko.bi.q";
-    public static final String DLQ_BI = "ko.bi.dlq";
+
+    public static final String DLQ = "ko.dlq";
+
+    public static final String QUEUE_X_LIMIT_ = "ko.x-limit.q";
 
     @Bean
     public TopicExchange klubOddsetExchange() {
@@ -37,9 +41,9 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue biDeadLetterQueue() {
+    public Queue deadLetterQueue() {
         return QueueBuilder
-                .durable(DLQ_BI)
+                .durable(DLQ)
                 .quorum()
                 .build();
     }
@@ -51,7 +55,28 @@ public class RabbitConfig {
 
     @Bean
     public Binding biDLQBinding() {
-        return new Binding(DLQ_BI, Binding.DestinationType.QUEUE, DLX_DEMO, ROUTING_KEY_BI_DEAD, null);
+        return new Binding(DLQ, Binding.DestinationType.QUEUE, DLX_DEMO, ROUTING_KEY_BI_DEAD, null);
     }
 
+    @Bean
+    public Queue xLimitQueue() {
+        return QueueBuilder
+                .durable(QUEUE_X_LIMIT_)
+                .deadLetterExchange(DLX_DEMO)
+                .deadLetterRoutingKey(ROUTING_KEY_X_LIMIT_DEAD)
+                .quorum()
+                .deliveryLimit(4)
+                .build();
+    }
+
+
+    @Bean
+    public Binding xLimitBinding() {
+        return new Binding(QUEUE_X_LIMIT_, Binding.DestinationType.QUEUE, EXCHANGE_DEMO, ROUTING_KEY_BI, null);
+    }
+
+    @Bean
+    public Binding xLimitDLQBinding() {
+        return new Binding(DLQ, Binding.DestinationType.QUEUE, DLX_DEMO, ROUTING_KEY_X_LIMIT_DEAD, null);
+    }
 }
