@@ -1,11 +1,19 @@
-### POST produce message
-POST localhost:8080/rabbit/produce
+### produce message
+POST localhost:8080/demo/rabbit/produce
 Content-Type: application/json
 
 {
-  "foo": "bar",
+  "type": "normal",
   "magic": 42
 }
 
+### Produce Stream message
+POST localhost:8080/demo/rabbit/stream/produce
+Content-Type: application/json
+
+{
+  "type": "stream",
+  "magic": 12
+}
 
 ###

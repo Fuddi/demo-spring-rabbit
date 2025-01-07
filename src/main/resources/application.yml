@@ -17,6 +17,10 @@ spring:
           initial-interval: 4s
           max-interval: 30s
           multiplier: 2
+    host: localhost #Default
+    port: 5672 #Default
+    username: guest #Default
+    password: guest #Default
 
 
 custom-consumer:
