@@ -7,26 +7,17 @@ spring:
     publisher-returns: true
     listener:
       simple:
-        concurrency: 1
-        default-requeue-rejected: false
+        concurrency: 1 # Minimum number of listener invoker threads.
+        default-requeue-rejected: true # Whether rejected deliveries are re-queued by default.
         max-concurrency: 3
         prefetch: 250
         retry:
-          max-attempts: 3
           enabled: true
-          initial-interval: 4s
-          max-interval: 30s
-          multiplier: 2
+          max-attempts: 4        # 4 total attempts
+          initial-interval: 2s   # 2 seconds
+          max-interval: 30s      # 30 seconds
+          multiplier: 2          # doubles each time
     host: localhost #Default
     port: 5672 #Default
     username: guest #Default
     password: guest #Default
-
-
-custom-consumer:
-  retry:
-    enabled: true
-    max-attempts: 5
-    initial-interval: 5s
-    max-interval: 40s
-    multiplier: 3

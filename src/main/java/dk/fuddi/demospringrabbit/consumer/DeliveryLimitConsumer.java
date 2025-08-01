@@ -1,26 +1,22 @@
-package dk.fuddi.demospringrabbit;
+package dk.fuddi.demospringrabbit.consumer;
 
+import dk.fuddi.demospringrabbit.config.RabbitConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.retry.RetryContext;
-import org.springframework.retry.support.RetrySynchronizationManager;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Slf4j
 @Service
-public class RetryContextConsumer {
+public class DeliveryLimitConsumer {
 
-    @RabbitListener(queues = RabbitConfig.QUEUE_BI)
+    @RabbitListener(queues = RabbitConfig.QUEUE_X_LIMIT)
     public void consume(Message message, MessageHeaders headers) {
         log.info("Consuming messageId [{}] headers [{}]", message.getMessageProperties().getMessageId(), headers);
 
-        RetryContext context = RetrySynchronizationManager.getContext();
-        if (Objects.requireNonNull(context).getRetryCount() > 0) {
-            log.info("Retry count [{}] processing messageId [{}]", context.getRetryCount(), message.getMessageProperties().getMessageId());
+        if (headers.containsKey("x-delivery-count")) {
+            log.info("Received message with delivery limit [{}]", headers.get("x-delivery-count"));
         }
 
         simulateProcessing(message);
@@ -28,6 +24,6 @@ public class RetryContextConsumer {
 
     private void simulateProcessing(Message message) {
         log.info("Simulate a failure to trigger retry for messageId [{}]", message.getMessageProperties().getMessageId());
-        throw new RuntimeException("Something went wrong");
+        throw new RuntimeException("XLimit processing failed");
     }
 }

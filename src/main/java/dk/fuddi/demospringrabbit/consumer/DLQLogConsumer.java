@@ -1,4 +1,4 @@
-package dk.fuddi.demospringrabbit;
+package dk.fuddi.demospringrabbit.consumer;
 
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;

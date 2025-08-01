@@ -1,7 +1,9 @@
 package dk.fuddi.demospringrabbit;
 
+import dk.fuddi.demospringrabbit.config.RabbitConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,16 +23,17 @@ public class DemoController {
 
     @PostMapping("/rabbit/produce")
     public void produce(@RequestBody String json) {
-        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_DEMO, RabbitConfig.ROUTING_KEY_BI, json, DemoController::setMessageId);
+        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_DEMO, RabbitConfig.ROUTING_KEY_BI, json, DemoController::setMessageProperties);
     }
 
     @PostMapping("/rabbit/stream/produce")
     public void streamProduce(@RequestBody String json) {
-        rabbitStreamTemplate.convertAndSend(json, DemoController::setMessageId);
+        rabbitStreamTemplate.convertAndSend(json, DemoController::setMessageProperties);
     }
 
-    private static Message setMessageId(Message message) {
+    private static Message setMessageProperties(Message message) {
         message.getMessageProperties().setMessageId(UUID.randomUUID().toString());
+        message.getMessageProperties().setContentType(MessageProperties.CONTENT_TYPE_JSON);
         return message;
     }
 }
