@@ -16,7 +16,7 @@ public class DeliveryLimitConsumer {
         log.info("Consuming messageId [{}] headers [{}]", message.getMessageProperties().getMessageId(), headers);
 
         if (headers.containsKey("x-delivery-count")) {
-            log.info("Received message with delivery limit [{}]", headers.get("x-delivery-count"));
+            log.info("Received message with delivery count [{}]", headers.get("x-delivery-count"));
         }
 
         simulateProcessing(message);
